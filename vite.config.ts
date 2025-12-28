@@ -8,7 +8,7 @@ import wasm from 'vite-plugin-wasm';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 
-dotenv.config();
+dotenv.config({ path: '.env.local' });
 
 export default defineConfig((config) => {
   return {
