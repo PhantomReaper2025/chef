@@ -26,6 +26,7 @@ export function ApiKeyCard() {
           openai: apiKey?.openai,
           xai: apiKey?.xai,
           google: apiKey?.google,
+          openrouter: apiKey?.openrouter,
         },
       });
       toast.success('Preference updated.', { id: value ? 'always' : 'quotaExhausted' });
@@ -35,7 +36,7 @@ export function ApiKeyCard() {
     }
   };
 
-  const hasAnyKey = apiKey && (apiKey.value || apiKey.openai || apiKey.xai || apiKey.google);
+  const hasAnyKey = apiKey && (apiKey.value || apiKey.openai || apiKey.xai || apiKey.google || apiKey.openrouter);
 
   const validateAnthropicApiKey = async (apiKey: string) => {
     return await convex.action(api.apiKeys.validateAnthropicApiKey, {
@@ -61,6 +62,12 @@ export function ApiKeyCard() {
     });
   };
 
+  const validateOpenrouterApiKey = async (apiKey: string) => {
+    return await convex.action(api.apiKeys.validateOpenrouterApiKey, {
+      apiKey,
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="rounded-lg border bg-bolt-elements-background-depth-1 shadow-sm">
@@ -68,10 +75,10 @@ export function ApiKeyCard() {
           <h2 className="mb-2 text-xl font-semibold text-content-primary">API Keys</h2>
 
           <p className="mb-1 max-w-prose text-sm text-content-secondary">
-            You can use your own API keys to cook with Chef.
+            You can use your own API keys with CodeAble AI.
           </p>
           <p className="mb-6 max-w-prose text-sm text-content-secondary">
-            By default, Chef will use tokens built into your Convex plan.
+            By default, CodeAble AI will use tokens built into your Convex plan.
           </p>
           
           <AlwaysUseKeyCheckbox
@@ -123,12 +130,22 @@ export function ApiKeyCard() {
           onValidate={validateXaiApiKey}
           instructionsUrl="https://docs.x.ai/docs/overview#welcome"
         />
+
+        <ApiKeyProviderCard
+          label="OpenRouter"
+          description="Access to multiple models with competitive pricing"
+          keyType="openrouter"
+          value={apiKey?.openrouter || ''}
+          isLoading={apiKey === undefined}
+          onValidate={validateOpenrouterApiKey}
+          instructionsUrl="https://openrouter.ai/keys"
+        />
       </div>
     </div>
   );
 }
 
-type KeyType = 'anthropic' | 'google' | 'openai' | 'xai';
+type KeyType = 'anthropic' | 'google' | 'openai' | 'xai' | 'openrouter';
 
 function ApiKeyProviderCard({
   label,
@@ -219,6 +236,10 @@ function ApiKeyProviderCard({
           await convex.mutation(api.apiKeys.deleteXaiApiKeyForCurrentMember);
           toast.success('xAI API key removed', { id: 'xai-removed' });
           break;
+        case 'openrouter':
+          await convex.mutation(api.apiKeys.deleteOpenrouterApiKeyForCurrentMember);
+          toast.success('OpenRouter API key removed', { id: 'openrouter-removed' });
+          break;
       }
     } catch (error) {
       captureException(error);
@@ -243,6 +264,7 @@ function ApiKeyProviderCard({
         openai: apiKey?.openai || undefined,
         xai: apiKey?.xai || undefined,
         google: apiKey?.google || undefined,
+        openrouter: apiKey?.openrouter || undefined,
       };
 
       switch (keyType) {
@@ -257,6 +279,9 @@ function ApiKeyProviderCard({
           break;
         case 'xai':
           apiKeyMutation.xai = cleanApiKey(newKeyValue);
+          break;
+        case 'openrouter':
+          apiKeyMutation.openrouter = cleanApiKey(newKeyValue);
           break;
       }
 
@@ -463,6 +488,10 @@ function ApiKeyItem({
           await convex.mutation(api.apiKeys.deleteXaiApiKeyForCurrentMember);
           toast.success('xAI API key removed', { id: 'xai-removed' });
           break;
+        case 'openrouter':
+          await convex.mutation(api.apiKeys.deleteOpenrouterApiKeyForCurrentMember);
+          toast.success('OpenRouter API key removed', { id: 'openrouter-removed' });
+          break;
       }
     } catch (error) {
       captureException(error);
@@ -487,6 +516,7 @@ function ApiKeyItem({
         openai: apiKey?.openai || undefined,
         xai: apiKey?.xai || undefined,
         google: apiKey?.google || undefined,
+        openrouter: apiKey?.openrouter || undefined,
       };
 
       switch (keyType) {
@@ -501,6 +531,9 @@ function ApiKeyItem({
           break;
         case 'xai':
           apiKeyMutation.xai = cleanApiKey(newKeyValue);
+          break;
+        case 'openrouter':
+          apiKeyMutation.openrouter = cleanApiKey(newKeyValue);
           break;
       }
 

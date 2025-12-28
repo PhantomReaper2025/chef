@@ -28,6 +28,12 @@ export function hasApiKeySet(
       return !!apiKey.xai?.trim();
     case 'gemini-2.5-pro':
       return !!apiKey.google?.trim();
+    case 'openrouter/anthropic/claude-3.5-sonnet':
+    case 'openrouter/openai/gpt-4-turbo':
+    case 'openrouter/meta-llama/llama-3.3-70b-instruct':
+    case 'openrouter/google/gemini-2.0-flash-exp':
+    case 'openrouter/mistralai/mistral-large':
+      return !!apiKey.openrouter?.trim();
     default: {
       const _exhaustiveCheck: never = modelSelection;
       return false;
