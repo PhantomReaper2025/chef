@@ -9,6 +9,7 @@ import { api } from '@convex/_generated/api';
 import type { Doc } from '@convex/_generated/dataModel';
 import { captureMessage } from '@sentry/remix';
 import { useLaunchDarkly } from '~/lib/hooks/useLaunchDarkly';
+import { SparklesIcon } from '@heroicons/react/24/outline';
 
 export type ModelProvider = 'openai' | 'google' | 'xai' | 'anthropic' | 'auto';
 
@@ -23,7 +24,7 @@ export function displayModelProviderName(provider: ModelProvider) {
     case 'anthropic':
       return 'Anthropic';
     case 'auto':
-      return 'Anthropic';
+      return 'Auto';
     default: {
       const exhaustiveCheck: never = provider;
       throw new Error(`Unknown model provider: ${exhaustiveCheck}`);
@@ -68,6 +69,7 @@ export const models: Partial<
       recommended?: boolean;
       requireKey?: boolean;
       provider: ModelProvider;
+      description?: string;
     }
   >
 > = {
@@ -75,45 +77,54 @@ export const models: Partial<
     name: 'Auto',
     recommended: true,
     provider: 'auto',
+    description: 'Automatically selects the best model for your task',
   },
   'claude-4-sonnet': {
     name: 'Claude 4 Sonnet',
     provider: 'anthropic',
     recommended: true,
     requireKey: false,
+    description: 'Balanced performance and speed',
   },
   'claude-4.5-sonnet': {
     name: 'Claude 4.5 Sonnet',
     provider: 'anthropic',
     recommended: false,
     requireKey: false,
+    description: 'Enhanced reasoning and longer context',
   },
   'gemini-2.5-pro': {
     name: 'Gemini 2.5 Pro',
     recommended: false,
     provider: 'google',
+    description: 'Fast responses with good accuracy',
   },
   'gpt-4.1': {
     name: 'GPT-4.1',
     provider: 'openai',
+    description: 'Advanced reasoning capabilities',
   },
   'gpt-5': {
     name: 'GPT-5',
     provider: 'openai',
+    description: 'Latest generation model',
   },
   'grok-3-mini': {
     name: 'Grok 3 Mini',
     provider: 'xai',
+    description: 'Fast and cost-efficient',
   },
   'claude-3-5-haiku': {
     name: 'Claude 3.5 Haiku',
     provider: 'anthropic',
     requireKey: true,
+    description: 'Lightning-fast responses',
   },
   'gpt-4.1-mini': {
     name: 'GPT-4.1 Mini',
     provider: 'openai',
     requireKey: true,
+    description: 'Compact and efficient',
   },
 } as const;
 
@@ -137,12 +148,29 @@ export const ModelSelector = React.memo(function ModelSelector({
     return true;
   });
 
+  // Group models by provider
+  const groupedModels = availableModels.reduce(
+    (acc, [value, model]) => {
+      if (!acc[model.provider]) {
+        acc[model.provider] = [];
+      }
+      acc[model.provider].push([value, model]);
+      return acc;
+    },
+    {} as Record<ModelProvider, typeof availableModels>,
+  );
+
+  // Order providers: auto first, then alphabetically
+  const orderedProviders: ModelProvider[] = ['auto', 'anthropic', 'google', 'openai', 'xai'].filter(
+    (p) => groupedModels[p as ModelProvider],
+  ) as ModelProvider[];
+
   return (
     <Combobox
       searchPlaceholder="Search models..."
       label="Select model"
       options={availableModels.map(([value, model]) => ({
-        label: model.provider + ' ' + model.name,
+        label: displayModelProviderName(model.provider) + ' ' + model.name,
         value: value as ModelSelection,
       }))}
       buttonClasses="w-fit"
@@ -164,20 +192,25 @@ export const ModelSelector = React.memo(function ModelSelector({
         const key = apiKey ? keyForProvider(apiKey, model.provider, useGeminiAuto) : undefined;
         const canUseModel = !(model.requireKey && !key) && !(prefersAlwaysUseApiKey && !key);
         return (
-          <div className={'flex items-center gap-2'}>
-            {providerToIcon[model.provider]}
-            <div className="max-w-48 truncate">{model?.name}</div>
+          <div className={'flex items-center gap-2 w-full'}>
+            <div className="flex size-5 shrink-0 items-center justify-center">{providerToIcon[model.provider]}</div>
+            <div className="flex flex-col flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="truncate font-medium">{model?.name}</span>
+                {!inButton && model.recommended && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-util-accent/10 px-2 py-0.5 text-xs font-medium text-util-accent">
+                    <SparklesIcon className="size-3" />
+                    Recommended
+                  </span>
+                )}
+              </div>
+              {!inButton && model.description && (
+                <div className="text-xs text-content-secondary truncate">{model.description}</div>
+              )}
+            </div>
 
             {!inButton && (
-              <div className="ml-auto flex gap-1">
-                {model.recommended && (
-                  <Tooltip
-                    tip="This model is recommended for most use cases. Other models may be more expensive or less accurate."
-                    side="right"
-                  >
-                    <HandThumbUpIcon className="size-4 text-content-secondary" />
-                  </Tooltip>
-                )}
+              <div className="ml-auto flex shrink-0 gap-1">
                 {!canUseModel && (
                   <Tooltip
                     tip={
@@ -187,7 +220,7 @@ export const ModelSelector = React.memo(function ModelSelector({
                     }
                     side="right"
                   >
-                    <KeyIcon className="size-4 text-content-secondary" />
+                    <KeyIcon className="size-4 text-content-warning" />
                   </Tooltip>
                 )}
               </div>

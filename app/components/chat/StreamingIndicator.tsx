@@ -163,26 +163,26 @@ export default function StreamingIndicator(props: StreamingIndicatorProps) {
   return (
     <AnimatePresence>
       <motion.div
-        className="-mb-2 mt-2 w-full max-w-chat rounded-t-xl border bg-background-secondary pb-2 shadow"
-        initial={{ translateY: '100%' }}
-        animate={{ translateY: '0%' }}
-        exit={{ translateY: '100%' }}
-        transition={{ duration: 0.15 }}
+        className="-mb-2 mt-2 w-full max-w-chat rounded-t-xl border bg-background-secondary/95 pb-2 shadow-lg backdrop-blur-sm"
+        initial={{ translateY: '100%', opacity: 0 }}
+        animate={{ translateY: '0%', opacity: 1 }}
+        exit={{ translateY: '100%', opacity: 0 }}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
       >
         <div
           data-streaming-indicator-stream-status={streamStatus}
           className={classNames('border-none shadow-none rounded-t-xl relative w-full max-w-chat mx-auto z-prompt')}
         >
           <div
-            className={classNames('bg-background-secondary/75', 'p-1.5 text-content-primary rounded-t-xl', '', 'flex')}
+            className={classNames('bg-background-secondary/90 backdrop-blur-sm', 'p-3 text-content-primary rounded-t-xl', 'flex')}
           >
             <div className="flex-1">
               <AnimatePresence>
                 <div className="actions">
-                  <div className={classNames('flex text-sm gap-3')}>
-                    <div className="flex w-full items-center gap-1.5">
-                      <div className="">{icon}</div>
-                      {message}
+                  <div className={classNames('flex text-sm gap-3 items-center')}>
+                    <div className="flex w-full items-center gap-2">
+                      <div className="flex items-center justify-center">{icon}</div>
+                      <div className="font-medium">{message}</div>
                       <div className="min-h-6 grow" />
                       <LittleUsage
                         teamSlug={teamSlug}
@@ -192,9 +192,10 @@ export default function StreamingIndicator(props: StreamingIndicatorProps) {
                       {streamStatus === 'error' && (
                         <Button
                           type="button"
-                          className="ml-2 h-auto"
+                          className="ml-2"
                           onClick={props.resendMessage}
                           icon={<ResetIcon />}
+                          size="xs"
                         >
                           Resend
                         </Button>

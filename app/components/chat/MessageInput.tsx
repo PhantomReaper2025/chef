@@ -251,9 +251,9 @@ export const MessageInput = memo(function MessageInput({
   );
 
   return (
-    <div className="relative z-20 mx-auto w-full max-w-chat rounded-xl shadow transition-all duration-200">
-      <div className="rounded-xl bg-background-primary/75 backdrop-blur-md">
-        <div className="rounded-t-xl border transition-all has-[textarea:focus]:border-border-selected">
+    <div className="relative z-20 mx-auto w-full max-w-chat rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl">
+      <div className="rounded-xl bg-background-primary/90 backdrop-blur-md ring-1 ring-border-primary">
+        <div className="rounded-t-xl border border-b-0 transition-all has-[textarea:focus]:border-border-selected has-[textarea:focus]:ring-2 has-[textarea:focus]:ring-util-accent/20">
           <TextareaWithHighlights
             onKeyDown={handleKeyDown}
             onChange={handleChange}
@@ -274,7 +274,7 @@ export const MessageInput = memo(function MessageInput({
         </div>
         <div
           className={classNames(
-            'flex items-center gap-2 border rounded-b-xl border-t-0 bg-background-secondary/80 p-1.5 text-sm flex-wrap',
+            'flex items-center gap-2 border rounded-b-xl border-t-0 bg-background-secondary/90 p-2 text-sm flex-wrap',
           )}
         >
           {chefAuthState.kind === 'fullyLoggedIn' && (
@@ -436,10 +436,11 @@ const TextareaWithHighlights = memo(function TextareaWithHighlights({
       <textarea
         ref={textareaRef}
         className={classNames(
-          'w-full px-3 py-3 outline-none resize-none text-content-primary placeholder-content-tertiary bg-transparent text-sm leading-snug',
-          'transition-opacity',
+          'w-full px-4 py-3 outline-none resize-none text-content-primary placeholder-content-tertiary bg-transparent text-sm leading-relaxed',
+          'transition-all duration-150',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           'scrollbar-thin scrollbar-thumb-macosScrollbar-thumb scrollbar-track-transparent',
+          'focus:placeholder-content-secondary',
         )}
         disabled={disabled}
         onKeyDown={onKeyDown}
@@ -450,6 +451,7 @@ const TextareaWithHighlights = memo(function TextareaWithHighlights({
         translate="no"
         // Disable Grammarly
         data-gramm="false"
+        aria-label="Message input"
       />
 
       <HighlightBlocks textareaRef={textareaRef} text={value} blocks={blocks} />

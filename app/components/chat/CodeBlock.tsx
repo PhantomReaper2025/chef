@@ -54,9 +54,9 @@ export const CodeBlock = memo(function CodeBlock({
   }, [code, language, theme]);
 
   return (
-    <div className={classNames('relative group', className)}>
+    <div className={classNames('relative group rounded-lg overflow-hidden border border-border-primary', className)}>
       <div
-        className={classNames('absolute top-2 right-2 opacity-0 group-hover:opacity-100', {
+        className={classNames('absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10', {
           'opacity-100': copied,
         })}
       >
@@ -67,10 +67,11 @@ export const CodeBlock = memo(function CodeBlock({
             onClick={() => copyToClipboard()}
             tip="Copy Code"
             tipSide="top"
+            className="shadow-lg"
           />
         )}
       </div>
-      <div dangerouslySetInnerHTML={{ __html: html ?? '' }}></div>
+      <div className="[&>pre]:m-0 [&>pre]:rounded-none [&>pre]:border-0" dangerouslySetInnerHTML={{ __html: html ?? '' }}></div>
     </div>
   );
 });
