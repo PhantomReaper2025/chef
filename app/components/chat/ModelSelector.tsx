@@ -11,7 +11,7 @@ import { captureMessage } from '@sentry/remix';
 import { useLaunchDarkly } from '~/lib/hooks/useLaunchDarkly';
 import { SparklesIcon } from '@heroicons/react/24/outline';
 
-export type ModelProvider = 'openai' | 'google' | 'xai' | 'anthropic' | 'auto';
+export type ModelProvider = 'openai' | 'google' | 'xai' | 'anthropic' | 'openrouter' | 'auto';
 
 export function displayModelProviderName(provider: ModelProvider) {
   switch (provider) {
@@ -23,6 +23,8 @@ export function displayModelProviderName(provider: ModelProvider) {
       return 'xAI';
     case 'anthropic':
       return 'Anthropic';
+    case 'openrouter':
+      return 'OpenRouter';
     case 'auto':
       return 'Auto';
     default: {
@@ -47,6 +49,7 @@ const providerToIcon: Record<string, React.ReactNode> = {
   openai: svgIcon('/icons/openai.svg'),
   anthropic: svgIcon('/icons/claude.svg'),
   google: svgIcon('/icons/gemini.svg'),
+  openrouter: svgIcon('/icons/openrouter.svg'),
   xai: (
     <svg width="16" height="16" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
@@ -126,6 +129,36 @@ export const models: Partial<
     requireKey: true,
     description: 'Compact and efficient',
   },
+  'openrouter/anthropic/claude-3.5-sonnet': {
+    name: 'Claude 3.5 Sonnet',
+    provider: 'openrouter',
+    requireKey: true,
+    description: 'Balanced performance via OpenRouter',
+  },
+  'openrouter/openai/gpt-4-turbo': {
+    name: 'GPT-4 Turbo',
+    provider: 'openrouter',
+    requireKey: true,
+    description: 'Advanced reasoning via OpenRouter',
+  },
+  'openrouter/meta-llama/llama-3.3-70b-instruct': {
+    name: 'Llama 3.3 70B',
+    provider: 'openrouter',
+    requireKey: true,
+    description: 'Open-source powerhouse via OpenRouter',
+  },
+  'openrouter/google/gemini-2.0-flash-exp': {
+    name: 'Gemini 2.0 Flash',
+    provider: 'openrouter',
+    requireKey: true,
+    description: 'Fast experimental model via OpenRouter',
+  },
+  'openrouter/mistralai/mistral-large': {
+    name: 'Mistral Large',
+    provider: 'openrouter',
+    requireKey: true,
+    description: 'High-performance model via OpenRouter',
+  },
 } as const;
 
 export const ModelSelector = React.memo(function ModelSelector({
@@ -161,7 +194,7 @@ export const ModelSelector = React.memo(function ModelSelector({
   );
 
   // Order providers: auto first, then alphabetically
-  const orderedProviders: ModelProvider[] = ['auto', 'anthropic', 'google', 'openai', 'xai'].filter(
+  const orderedProviders: ModelProvider[] = ['auto', 'anthropic', 'google', 'openai', 'openrouter', 'xai'].filter(
     (p) => groupedModels[p as ModelProvider],
   ) as ModelProvider[];
 
@@ -242,6 +275,9 @@ const keyForProvider = (apiKeys: Doc<'convexMembers'>['apiKey'], provider: Model
     } else {
       return apiKeys?.value;
     }
+  }
+  if (provider === 'openrouter') {
+    return apiKeys?.openrouter;
   }
   return apiKeys?.[provider];
 };

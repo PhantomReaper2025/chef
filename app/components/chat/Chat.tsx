@@ -195,7 +195,10 @@ export const Chat = memo(
 
         // Map models to their respective providers
         const MODEL_TO_PROVIDER_MAP: {
-          [K in ModelSelection]: { providerName: ModelProvider; apiKeyField: 'value' | 'openai' | 'xai' | 'google' };
+          [K in ModelSelection]: {
+            providerName: ModelProvider;
+            apiKeyField: 'value' | 'openai' | 'xai' | 'google' | 'openrouter';
+          };
         } = {
           auto: { providerName: 'anthropic', apiKeyField: 'value' },
           'claude-4-sonnet': { providerName: 'anthropic', apiKeyField: 'value' },
@@ -206,6 +209,11 @@ export const Chat = memo(
           'gemini-2.5-pro': { providerName: 'google', apiKeyField: 'google' },
           'claude-3-5-haiku': { providerName: 'anthropic', apiKeyField: 'value' },
           'gpt-4.1-mini': { providerName: 'openai', apiKeyField: 'openai' },
+          'openrouter/anthropic/claude-3.5-sonnet': { providerName: 'openrouter', apiKeyField: 'openrouter' },
+          'openrouter/openai/gpt-4-turbo': { providerName: 'openrouter', apiKeyField: 'openrouter' },
+          'openrouter/meta-llama/llama-3.3-70b-instruct': { providerName: 'openrouter', apiKeyField: 'openrouter' },
+          'openrouter/google/gemini-2.0-flash-exp': { providerName: 'openrouter', apiKeyField: 'openrouter' },
+          'openrouter/mistralai/mistral-large': { providerName: 'openrouter', apiKeyField: 'openrouter' },
         };
 
         // Get provider info for the current model
@@ -322,6 +330,15 @@ export const Chat = memo(
         } else if (modelSelection === 'gpt-5') {
           modelProvider = 'OpenAI';
           modelChoice = 'gpt-5';
+        } else if (
+          modelSelection === 'openrouter/anthropic/claude-3.5-sonnet' ||
+          modelSelection === 'openrouter/openai/gpt-4-turbo' ||
+          modelSelection === 'openrouter/meta-llama/llama-3.3-70b-instruct' ||
+          modelSelection === 'openrouter/google/gemini-2.0-flash-exp' ||
+          modelSelection === 'openrouter/mistralai/mistral-large'
+        ) {
+          modelProvider = 'OpenRouter';
+          modelChoice = modelSelection.replace('openrouter/', '');
         } else {
           const _exhaustiveCheck: never = modelSelection;
           throw new Error(`Unknown model: ${_exhaustiveCheck}`);

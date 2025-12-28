@@ -7,8 +7,8 @@ import { Homepage } from '~/components/Homepage.client';
 
 export const meta: MetaFunction = () => {
   return [
-    { title: 'Chef by Convex | Generate realtime full‑stack apps' },
-    { name: 'description', content: 'Cook up something hot with Chef, the full-stack AI coding agent from Convex' },
+    { title: 'CodeAble AI | Generate realtime full‑stack apps' },
+    { name: 'description', content: 'Build amazing apps with CodeAble AI, the full-stack AI coding agent' },
     {
       property: 'og:image',
       content: '/social_preview_index.png',

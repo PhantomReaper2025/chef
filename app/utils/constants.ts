@@ -33,6 +33,11 @@ export type ModelSelection =
   | 'gpt-4.1-mini'
   | 'gpt-5'
   | 'grok-3-mini'
-  | 'gemini-2.5-pro';
+  | 'gemini-2.5-pro'
+  | 'openrouter/anthropic/claude-3.5-sonnet'
+  | 'openrouter/openai/gpt-4-turbo'
+  | 'openrouter/meta-llama/llama-3.3-70b-instruct'
+  | 'openrouter/google/gemini-2.0-flash-exp'
+  | 'openrouter/mistralai/mistral-large';
 
 export const MAX_CONSECUTIVE_DEPLOY_ERRORS = 5;
