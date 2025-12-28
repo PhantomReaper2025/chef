@@ -100,14 +100,15 @@ export const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messa
             <div
               key={index}
               className={classNames(
-                'flex gap-4 p-4 w-full rounded-[calc(0.75rem-1px)] relative border border-neutral-200 dark:border-neutral-700',
+                'flex gap-4 p-5 w-full rounded-xl relative border transition-all',
                 {
-                  'bg-bolt-elements-messages-background': isUserMessage,
+                  'bg-bolt-elements-messages-background border-neutral-200 dark:border-neutral-700': isUserMessage,
+                  'bg-bolt-elements-background-depth-1 border-border-primary hover:border-border-selected': !isUserMessage,
                 },
               )}
             >
               {isUserMessage && (
-                <div className="flex size-[40px] shrink-0 items-center justify-center self-start overflow-hidden rounded-full bg-white text-gray-600 dark:bg-gray-800 dark:text-gray-500">
+                <div className="flex size-[40px] shrink-0 items-center justify-center self-start overflow-hidden rounded-full bg-white text-gray-600 shadow-sm ring-1 ring-black/5 dark:bg-gray-800 dark:text-gray-500 dark:ring-white/10">
                   {profile?.avatar ? (
                     <img
                       src={profile.avatar}
@@ -159,14 +160,14 @@ export const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messa
           );
         })
       ) : (
-        <div className="flex flex-col items-center justify-center px-4 py-16 text-center">
-          <div className="mb-6 flex size-[64px] shrink-0 items-center justify-center rounded-full text-gray-600 dark:text-gray-500">
+        <div className="flex flex-col items-center justify-center px-4 py-20 text-center">
+          <div className="mb-6 flex size-[64px] shrink-0 items-center justify-center rounded-full bg-bolt-elements-background-depth-2 text-content-secondary ring-1 ring-border-primary">
             <ChatBubbleIcon className="size-8" />
           </div>
           <h3 className="mb-2 text-xl font-semibold text-content-primary">
             Ready to cook up a new feature or fix a bug?
           </h3>
-          <p className="max-w-md text-content-secondary">Send a message below to start on your next task!</p>
+          <p className="max-w-md text-sm text-content-secondary">Send a message below to start on your next task!</p>
         </div>
       )}
 

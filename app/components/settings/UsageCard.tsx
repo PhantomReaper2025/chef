@@ -26,33 +26,38 @@ export function UsageCard() {
   });
 
   return (
-    <div className="rounded-lg border bg-bolt-elements-background-depth-1 shadow-sm">
+    <div className="rounded-lg border bg-bolt-elements-background-depth-1 shadow-sm transition-all hover:shadow-md">
       <div className="p-6">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-6 flex items-center justify-between gap-4">
           <h2 className="text-xl font-semibold text-content-primary">Chef Usage</h2>
           <div className="ml-auto">
             <TeamSelector selectedTeamSlug={selectedTeamSlug} setSelectedTeamSlug={setSelectedTeamSlug} />
           </div>
         </div>
-        <p className="mb-1 text-sm text-content-secondary">Your Convex team comes with tokens included for Chef.</p>
-        <p className="mb-1 text-sm text-content-secondary">
-          On paid Convex subscriptions, additional usage will be subject to metered billing.
-        </p>
-        <p className="mb-4 text-sm text-content-secondary">
-          On free plans, Chef will not be usable once you hit the limit for the current billing period.
-        </p>
-        <div className="space-y-4">
-          <div className="w-80 max-w-80">
+        
+        <div className="mb-6 rounded-lg border bg-bolt-elements-background-depth-2 p-4">
+          <p className="mb-2 text-sm font-medium text-content-primary">Your Convex team comes with tokens included for Chef.</p>
+          <p className="mb-1 text-xs text-content-secondary">
+            On paid Convex subscriptions, additional usage will be subject to metered billing.
+          </p>
+          <p className="text-xs text-content-secondary">
+            On free plans, Chef will not be usable once you hit the limit for the current billing period.
+          </p>
+        </div>
+        
+        <div className="space-y-5">
+          <div className="w-full max-w-2xl">
             {isLoadingUsage ? (
-              <div className="size-full h-4 overflow-hidden rounded bg-gray-200 dark:bg-gray-700">
+              <div className="size-full h-6 overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-700">
                 <div className="animate-shimmer absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
               </div>
             ) : (
-              <div className="flex items-center gap-2 text-sm text-content-secondary">
-                <div className="grow">
-                  <ProgressBar fraction={usagePercentage / 100} variant="solid" ariaLabel="Token Usage percentage" />
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium text-content-primary">Token Usage</span>
+                  <span className="font-semibold text-content-primary">{usagePercentage.toFixed(0)}% used</span>
                 </div>
-                {usagePercentage.toFixed(0)}% used
+                <ProgressBar fraction={usagePercentage / 100} variant="solid" ariaLabel="Token Usage percentage" />
               </div>
             )}
           </div>

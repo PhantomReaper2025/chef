@@ -39,3 +39,22 @@ html.dark {
     @apply bottom-4;
   }
 }
+
+/* Enhanced focus states for accessibility */
+@layer base {
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-util-accent;
+  }
+  
+  button:focus-visible,
+  a:focus-visible,
+  [role="button"]:focus-visible {
+    @apply ring-2 ring-util-accent ring-offset-2 ring-offset-bolt-elements-background-depth-1;
+  }
+  
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply outline-none ring-2 ring-util-accent/50;
+  }
+}
